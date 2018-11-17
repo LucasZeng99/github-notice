@@ -9,7 +9,7 @@ export class Store {
     constructor () {
         if (usernames.length === 0 || users.length === 0) syncFromLocalStorage()
     }
-    
+
     snapUserNames () {
         return usernames
     }
@@ -56,8 +56,18 @@ export class Settings {
     }
 
     saveCurrentUser () {
+        for (let name of usernames) {
+            if (_.toLower(name) === _.toLower(this.targetUserName)) return
+        }
+
         usernames.push(this.targetUserName)
         users.push(this.targetUser)
+        updateLocalStorage()
+    }
+
+    cleanUsers () {
+        usernames = []
+        users = []
         updateLocalStorage()
     }
 }
@@ -87,4 +97,4 @@ function updateLocalStorage () {
       localStorage.removeItem('usernames')
       localStorage.removeItem('users')
     }
-  }
+}
