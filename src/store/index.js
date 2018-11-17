@@ -43,6 +43,7 @@ export class Settings {
     constructor () {
         this.targetUser = {}
         this.targetUserName = ''
+        if (usernames.length === 0 || users.length === 0) syncFromLocalStorage()
     }
 
     async checkUserName (username) { // return true or false, call saveCurrentUser if true.
@@ -50,14 +51,17 @@ export class Settings {
         if (res) {
             this.targetUser = res.data
             this.targetUserName = res.data.login
+            console.log("target user name: ", this.targetUserName)
             return true
         }
         return false
     }
 
     saveCurrentUser () {
-        for (let name of usernames) {
-            if (_.toLower(name) === _.toLower(this.targetUserName)) return;
+        console.log(this.targetUserName, usernames)
+        for (let i = 0; i < usernames.length; i++) {
+            console.log(usernames[i], this.targetUserName)
+            if (_.toLower(usernames[i]) === _.toLower(this.targetUserName)) return;
         }
         if (!this.targetUser) return;
 
@@ -86,8 +90,8 @@ async function fetchGithub (url, msg) {
 }
 
 function syncFromLocalStorage () {
-    users = localStorage.getItem('users') || []
-    usernames = localStorage.getItem('usernames') || []
+    users = JSON.parse(localStorage.getItem('users') || [])
+    usernames = JSON.parse(localStorage.getItem('usernames') || [])
 }
 
 function updateLocalStorage () {
