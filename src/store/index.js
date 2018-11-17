@@ -27,8 +27,15 @@ export class Store {
         return null
     }
 
-    getUserActivities (username) {
-
+    async getUserActivities (username) {
+        let i = 0
+        for (; i < usernames.length; i++) {
+            if (_.toLower(username) === _.toLower(usernames[i])) break
+        }
+        if (i < usernames.length) {
+            let res = await fetchGithub('https://api.github.com/users/' + users[i] + '/events', () => console.log("cannot fetch user", username, " data"))
+            console.log(res && res.data)
+        }
     }
 }
 
@@ -39,14 +46,7 @@ export class Settings {
     }
 
     async checkUserName (username) { // return true or false, call saveCurrentUser if true.
-        let res
-        try {
-            res = await fetchGithub('https://api.github.com/users/' + username, () => console.log(`username ${username} not found`))
-        } catch (e) {
-            if (e.response.status === 404) {}
-            else throw new Error("not 404")
-        }
-
+        let res = await fetchGithub('https://api.github.com/users/' + username, () => console.log(`username ${username} not found`))
         if (res) {
             this.targetUser = res.data
             this.targetUserName = res.data.login
@@ -57,8 +57,9 @@ export class Settings {
 
     saveCurrentUser () {
         for (let name of usernames) {
-            if (_.toLower(name) === _.toLower(this.targetUserName)) return
+            if (_.toLower(name) === _.toLower(this.targetUserName)) return;
         }
+        if (!this.targetUser) return;
 
         usernames.push(this.targetUserName)
         users.push(this.targetUser)
