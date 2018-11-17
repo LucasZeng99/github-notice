@@ -2,10 +2,10 @@ import React from "react";
 
 const Form = props => {
   return (
-    <div className="form">
-      <input type="text" placeholder="Enter name" />
+    <form className="form" onSubmit={props.checkAndSave}>
+      <input type="text" placeholder="Enter name" name="name" />
       <button>Submit</button>
-    </div>
+    </form>
   );
 };
 
