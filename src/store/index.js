@@ -1,105 +1,114 @@
-import _ from 'lodash'
-import axios from 'axios'
-let usernames = []
-let users = []
-let activities = []
-
+import _ from "lodash";
+import axios from "axios";
+let usernames = [];
+let users = [];
+let activities = [];
 
 export class Store {
-    constructor () {
-        if (usernames.length === 0 || users.length === 0) syncFromLocalStorage()
-    }
+  constructor() {
+    if (usernames.length === 0 || users.length === 0) syncFromLocalStorage();
+  }
 
-    snapUserNames () {
-        return usernames
-    }
+  snapUserNames() {
+    return usernames;
+  }
 
-    snapUsers () {
-        return users
-    }
+  snapUsers() {
+    return users;
+  }
 
-    getUserData (username) {
-        for (let i = 0; i < users.length; i++) {
-            if (_.toLower(users.login) === _.toLower(username)) {
-                return users[i]
-            }
-        }
-        return null
+  getUserData(username) {
+    for (let i = 0; i < users.length; i++) {
+      if (_.toLower(users.login) === _.toLower(username)) {
+        return users[i];
+      }
     }
+    return null;
+  }
 
-    async getUserActivities (username) {
-        let i = 0
-        for (; i < usernames.length; i++) {
-            if (_.toLower(username) === _.toLower(usernames[i])) break
-        }
-        if (i < usernames.length) {
-            let res = await fetchGithub('https://api.github.com/users/' + users[i] + '/events', () => console.log("cannot fetch user", username, " data"))
-            console.log(res && res.data)
-        }
+  async getUserActivities(username) {
+    let i = 0;
+    for (; i < usernames.length; i++) {
+      if (_.toLower(username) === _.toLower(usernames[i])) break;
     }
+    if (i < usernames.length) {
+      let res = await fetchGithub(
+        "https://api.github.com/users/" + users[i] + "/events",
+        () => console.log("cannot fetch user", username, " data")
+      );
+      console.log(res && res.data);
+    }
+  }
 }
 
 export class Settings {
-    constructor () {
-        this.targetUser = {}
-        this.targetUserName = ''
-        if (usernames.length === 0 || users.length === 0) syncFromLocalStorage()
-    }
+  constructor() {
+    this.targetUser = {};
+    this.targetUserName = "";
+    if (usernames.length === 0 || users.length === 0) syncFromLocalStorage();
+  }
 
-    async checkUserName (username) { // return true or false, call saveCurrentUser if true.
-        let res = await fetchGithub('https://api.github.com/users/' + username, () => console.log(`username ${username} not found`))
-        if (res) {
-            this.targetUser = res.data
-            this.targetUserName = res.data.login
-            console.log("target user name: ", this.targetUserName)
-            return true
-        }
-        return false
+  async checkUserName(username) {
+    // return true or false, call saveCurrentUser if true.
+    let res = await fetchGithub(
+      "https://api.github.com/users/" + username,
+      () => console.log(`username ${username} not found`)
+    );
+    if (res) {
+      this.targetUser = res.data;
+      this.targetUserName = res.data.login;
+      console.log("target user name: ", this.targetUserName);
+      return true;
     }
+    return false;
+  }
 
-    saveCurrentUser () {
-        console.log(this.targetUserName, usernames)
-        for (let i = 0; i < usernames.length; i++) {
-            console.log(usernames[i], this.targetUserName)
-            if (_.toLower(usernames[i]) === _.toLower(this.targetUserName)) return;
-        }
-        if (!this.targetUser) return;
-
-        usernames.push(this.targetUserName)
-        users.push(this.targetUser)
-        updateLocalStorage()
+  saveCurrentUser() {
+    console.log(this.targetUserName, usernames);
+    for (let i = 0; i < usernames.length; i++) {
+      console.log(usernames[i], this.targetUserName);
+      if (_.toLower(usernames[i]) === _.toLower(this.targetUserName)) return;
     }
+    if (!this.targetUser) return;
 
-    cleanUsers () {
-        usernames = []
-        users = []
-        updateLocalStorage()
-    }
+    usernames.push(this.targetUserName);
+    users.push(this.targetUser);
+    updateLocalStorage();
+  }
+  removeUser(username) {
+    usernames = usernames.filter(u => u !== username);
+    updateLocalStorage();
+  }
+  cleanUsers() {
+    usernames = [];
+    users = [];
+    updateLocalStorage();
+  }
 }
 
-async function fetchGithub (url, msg) {
-    let res
-    try {
-      res = await axios.get(url)
-    } catch (error) {
-      if (error.response.status === 404) {
-        msg()
-      } else throw error
-    }
-    return res
+async function fetchGithub(url, msg) {
+  let res;
+  try {
+    res = await axios.get(url);
+  } catch (error) {
+    if (error.response.status === 404) {
+      msg();
+    } else throw error;
+  }
+  return res;
 }
 
-function syncFromLocalStorage () {
-    users = JSON.parse(localStorage.getItem('users') || [])
-    usernames = JSON.parse(localStorage.getItem('usernames') || [])
+function syncFromLocalStorage() {
+  users = JSON.parse(localStorage.getItem("users") || []);
+  usernames = JSON.parse(localStorage.getItem("usernames") || []);
 }
 
-function updateLocalStorage () {
-    if (users) {
-      localStorage.setItem('usernames', JSON.stringify(usernames))
-      localStorage.setItem('users', JSON.stringify(users))
-    } else {
-      localStorage.removeItem('usernames')
-      localStorage.removeItem('users')
-    }
+function updateLocalStorage() {
+  if (users) {
+    localStorage.setItem("usernames", JSON.stringify(usernames));
+    localStorage.setItem("users", JSON.stringify(users));
+  } else {
+    localStorage.removeItem("usernames");
+    localStorage.removeItem("users");
+  }
 }
