@@ -32,10 +32,13 @@ export class Store {
         for (; i < usernames.length; i++) {
             if (_.toLower(username) === _.toLower(usernames[i])) break
         }
+        
         if (i < usernames.length) {
-            let res = await fetchGithub('https://api.github.com/users/' + users[i] + '/events', () => console.log("cannot fetch user", username, " data"))
-            console.log(res && res.data)
+            let res = await fetchGithub('https://api.github.com/users/' + users[i].login + '/events', () => console.log("cannot fetch user", users[i].login, " data"))
+            console.log(res.data)
+            if (res) return res.data
         }
+        return null
     }
 }
 
