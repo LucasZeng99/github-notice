@@ -58,15 +58,17 @@ button {
   position: fixed;
   flex-direction: row;
   width: 300px;
-  padding: 15px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   z-index: 999;
+  background-color: #e8e8e8;
 }
 .navLink {
   flex-grow: 1;
   text-align: center;
+  padding: 15px;
 }
-
+.navBar .active {
+  background-color: white;
+}
 .userContainer {
   display: flex;
   justify-content: center;
@@ -99,4 +101,19 @@ button {
 }
 .removeButton:hover {
   color: rgba(0, 0, 0, 0.7);
+}
+
+.activityContainer {
+  margin-top: 3.3rem;
+  width: 300px;
+  height: 400px;
+}
+
+.activity {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 15px 10px;
+  box-sizing: border-box;
+  border-top: 1px solid #f0f0f0;
 }
