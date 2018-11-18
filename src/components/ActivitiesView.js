@@ -75,9 +75,12 @@ class ActivitiesView extends Component {
   }
 
   render() {
-    return <div className="activityContainer">
-      {this.renderActivities()}
-    </div>;
+    return (
+      <div className="activityContainer">
+        {_.isEmpty(store.snapUserNames()) && <div>No activities</div>}
+        {this.renderActivities()}
+      </div>
+    );
   }
 }
 

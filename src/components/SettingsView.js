@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { ReactDOM } from "react-dom";
 import { Settings, Store, fetchGithub } from "../store/index";
 import Form from "./Form";
 
@@ -88,10 +87,12 @@ class SettingsView extends Component {
     const name = e.target.elements.name.value;
     let username = await settings.checkUserName(name)
     if (username) {
-      let {data} = await fetchGithub(`https://api.github.com/users/${username}/following`)
-      let usersArray = data
+      let { data } = await fetchGithub(
+        `https://api.github.com/users/${username}/following`
+      );
+      let usersArray = data;
       for (let i = 0; i < usersArray.length; i++) {
-        settings.saveCurrentUser(usersArray[i], usersArray[i].login)
+        settings.saveCurrentUser(usersArray[i], usersArray[i].login);
       }
 
       let usernames = store.snapUserNames()

@@ -7,7 +7,8 @@ let activities_time = null
 
 export class Store {
   constructor() {
-    if (usernames.length === 0 || users.length === 0) syncFromLocalStorage();
+    if (usernames.length === 0 || users.length === 0 || activities.length === 0)
+      syncFromLocalStorage();
   }
 
   snapUserNames() {
@@ -52,6 +53,7 @@ export class Store {
       );
       if (res) return res.data;
     }
+
     return null;
   }
 }
