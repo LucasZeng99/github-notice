@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch} from "react-router-dom";
 import "../App.css";
 import Navbar from "./Navbar";
 import ActivitiesView from "./ActivitiesView";
@@ -10,8 +10,8 @@ const Router = () => {
       <div className="router">
         <Navbar />
         <Switch>
-          <Route path="/" component={ActivitiesView} exact />
-          <Route path="/settings" component={SettingsView} />
+        <Route path="/settings" component={SettingsView} />
+          <Route path="/" component={ActivitiesView}/>
         </Switch>
       </div>
     </BrowserRouter>
