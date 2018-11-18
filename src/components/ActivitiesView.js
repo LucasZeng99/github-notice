@@ -4,39 +4,39 @@ import { Store } from "../store/index";
 const store = new Store();
 
 class ActivitiesView extends Component {
-  
   state = {
     activities: {},
     usernames: []
-  }
+  };
 
-  async fetchActivities () {
-    let _activities = []
-    let usernames = store.snapUserNames()
-    _activities = await Promise.all(usernames.map(name => store.getUserActivities(name)))
+  async fetchActivities() {
+    let _activities = [];
+    let usernames = store.snapUserNames();
+    _activities = await Promise.all(
+      usernames.map(name => store.getUserActivities(name))
+    );
 
-    let activities = {}
+    let activities = {};
     for (let i = 0; i < _activities.length; i++) {
-      activities[usernames[i]] = _activities[i]
+      activities[usernames[i]] = _activities[i];
     }
     
     activities = normalizeActivities(activities)
     activities = flattenActivities(activities).sort((a, b) => {
       return new Date(b.time) - new Date(a.time)
     })
-
-    this.setState({activities})
+    this.setState({ activities });
   }
 
-  fetchUserNames () {
+  fetchUserNames() {
     this.setState({
       usernames: store.snapUserNames()
-    })
+    });
   }
 
-  componentDidMount () {
-    this.fetchUserNames()
-    this.fetchActivities()
+  componentDidMount() {
+    this.fetchUserNames();
+    this.fetchActivities();
   }
 
   renderActivities () {
@@ -54,45 +54,43 @@ class ActivitiesView extends Component {
           )
     }
 
-    return renderedEvents
+    return renderedEvents;
   }
 
-  render () {
-    return (
-      <div className="container" style={{ width: "300px", height: "400px" }}>
-        {this.renderActivities()}
-      </div>
-    )
+  render() {
+    return <div className="activityContainer">{this.renderActivities()}</div>;
   }
-};
+}
 
 export default ActivitiesView;
 
-
-export function normalizeActivities (activities) {
-  let finalActivities = {}
+export function normalizeActivities(activities) {
+  let finalActivities = {};
   for (let name of Object.keys(activities)) {
-    let events = activities[name]
+    let events = activities[name];
 
-    let newEvents = []
+    let newEvents = [];
     let newEvent = {
-      type: '',
+      type: "",
       repo: {},
       count: 0,
       time: 0
     }
 
-    let i = 0
+    let i = 0;
     while (i < events.length) {
-      let event = events[i]
-      mapEventType(event)
-      mapEventRepo(event, name)
-      if (newEvent && newEvent.type === event.type && newEvent.repo.name === event.repo.name) {
-        newEvent.count += event.payload.size || 1
-        console.log("same obj")
-      }
-      else {
-        if (Boolean(newEvent.type)) newEvents.push(newEvent)
+      let event = events[i];
+      mapEventType(event);
+      mapEventRepo(event, name);
+      if (
+        newEvent &&
+        newEvent.type === event.type &&
+        newEvent.repo.name === event.repo.name
+      ) {
+        newEvent.count += event.payload.size || 1;
+        console.log("same obj");
+      } else {
+        if (Boolean(newEvent.type)) newEvents.push(newEvent);
         newEvent = {
           type: event.type,
           repo: event.repo,
@@ -101,28 +99,28 @@ export function normalizeActivities (activities) {
           url: event.repo.url
         }
       }
-      i++
+      i++;
     }
-    if (!!newEvent.type) newEvents.push(newEvent)
-      
-    finalActivities[name] = newEvents
+    if (!!newEvent.type) newEvents.push(newEvent);
+
+    finalActivities[name] = newEvents;
   }
-  return finalActivities
+  return finalActivities;
 }
 
-function mapEventType (event) {
+function mapEventType(event) {
   switch (event.type) {
     case "PushEvent":
-      event.type = "commit"
+      event.type = "commit";
       break;
     case "IssuesEvent":
-      event.type = "issue"
+      event.type = "issue";
       break;
     case "WatchEvent":
-      event.type = "star"
+      event.type = "star";
       break;
     case "PublicEvent":
-      event.type = "public"
+      event.type = "public";
       break;
     case "CreateEvent":
       event.type = "new repo"
