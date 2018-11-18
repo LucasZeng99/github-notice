@@ -62,10 +62,8 @@ class SettingsView extends Component {
     if (username) {
       let {data} = await fetchGithub(`https://api.github.com/users/${username}/following`)
       let usersArray = data
-      console.log(usersArray)
       for (let i = 0; i < usersArray.length; i++) {
-        console.log(usersArray[i], usersArray.login)
-        settings.saveCurrentUser(usersArray[i], usersArray.login)
+        settings.saveCurrentUser(usersArray[i], usersArray[i].login)
       }
     }
   }
