@@ -48,9 +48,10 @@ class ActivitiesView extends Component {
       for (let j = 0; j < activities[keys[i]].length; j++) {
         event = activities[keys[i]][j]
         console.log(event)
+        let type = (event.count > 1) ? event.type + 's' : event.type
         renderedEvents.push(
           <div>
-          {keys[i]}: {event.count} {event.type} on {event.repo.name}
+          {keys[i]}: {event.count} {type} on {event.repo.name}
           </div>
           )
       }
@@ -62,7 +63,6 @@ class ActivitiesView extends Component {
   render () {
     return (
       <div className="container" style={{ width: "300px", height: "400px" }}>
-        Activities
         {this.renderActivities()}
       </div>
     )
@@ -87,6 +87,8 @@ export function normalizeActivities (activities) {
     let i = 0
     while (i < events.length) {
       let event = events[i]
+      mapEventType(event)
+      mapEventRepo(event, name)
       if (newEvent && newEvent.type === event.type && newEvent.repo.name === event.repo.name) {
         newEvent.count += event.payload.size || 1
         console.log("same obj")
@@ -106,4 +108,32 @@ export function normalizeActivities (activities) {
     finalActivities[name] = newEvents
   }
   return finalActivities
+}
+
+function mapEventType (event) {
+  switch (event.type) {
+    case "PushEvent":
+      event.type = "commit"
+      break;
+    case "IssuesEvent":
+      event.type = "issue"
+      break;
+    case "WatchEvent":
+      event.type = "star"
+      break;
+    case "PublicEvent":
+      event.type = "public"
+      break;
+    case "CreateEvent":
+      event.type = "new repo"
+      break
+    default:
+      break;
+  }
+}
+
+function mapEventRepo (event, name) {
+  let repoOwner = event.repo.name.slice(0, event.repo.name.indexOf('/'))
+  console.log(repoOwner)
+  if (repoOwner === name) event.repo.name = event.repo.name.slice(event.repo.name.indexOf('/'))
 }
