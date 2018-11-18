@@ -39,19 +39,22 @@ class ActivitiesView extends Component {
     this.fetchActivities();
   }
 
-  renderActivities () {
-    let renderedEvents = []
-    let activities = this.state.activities || {}
-    
-    let event
+  renderActivities() {
+    let renderedEvents = [];
+    let activities = this.state.activities || {};
+
+    let event;
     for (let i = 0; i < activities.length; i++) {
-        event = activities[i]
-        let type = (event.count > 1) ? event.type + 's' : event.type
-        renderedEvents.push(
+      event = activities[i];
+      let type = event.count > 1 ? event.type + "s" : event.type;
+      renderedEvents.push(
+        <div className="activity">
           <div>
-          {event.user}: {event.count} {type} on {event.repo.name}
+            {event.user}: {event.count} {type}
           </div>
-          )
+          <div>on {event.repo.name}</div>
+        </div>
+      );
     }
 
     return renderedEvents;
@@ -139,15 +142,15 @@ function mapEventRepo (event, name) {
 }
 
 function flattenActivities(activities) {
-  let newActivities = []
-  let keys = Object.keys(activities)
+  let newActivities = [];
+  let keys = Object.keys(activities);
 
   for (let i = 0; i < keys.length; i++) {
-    let name = keys[i]
+    let name = keys[i];
     for (let j = 0; j < activities[name].length; j++) {
-      let event = activities[name][j]
-      event.user = name
-      newActivities.push(event)
+      let event = activities[name][j];
+      event.user = name;
+      newActivities.push(event);
     }
   }
   return newActivities

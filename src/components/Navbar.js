@@ -3,18 +3,23 @@ import { Link } from "react-router-dom";
 
 class Navbar extends Component {
   state = { activityActive: true, settingsActive: false };
-  toggleActive = () => {};
+  toggleActive = (activity, settings) => {
+    this.setState({
+      activityActive: activity,
+      settingsActive: settings
+    });
+  };
   render() {
     return (
       <nav className="navBar">
         <div className={`navLink ${this.state.activityActive && "active"}`}>
-          <Link to="/" onClick={this.toggleActive}>
+          <Link to="/" onClick={() => this.toggleActive(true, false)}>
             Activities
           </Link>
         </div>
 
         <div className={`navLink ${this.state.settingsActive && "active"}`}>
-          <Link to="/settings" onClick={this.toggleActive}>
+          <Link to="/settings" onClick={() => this.toggleActive(false, true)}>
             Settings
           </Link>
         </div>
