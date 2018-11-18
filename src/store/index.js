@@ -61,23 +61,26 @@ export class Settings {
       this.targetUser = res.data;
       this.targetUserName = res.data.login;
       console.log("target user name: ", this.targetUserName);
-      return true;
+      return this.targetUserName;
     }
     return false;
   }
 
-  saveCurrentUser() {
-    console.log(this.targetUserName, usernames);
+  saveCurrentUser(user, userName) {
+    if (!user) user = this.targetUser
+    if (!userName) userName = this.targetUserName
+    console.log(userName, usernames);
     for (let i = 0; i < usernames.length; i++) {
-      console.log(usernames[i], this.targetUserName);
-      if (_.toLower(usernames[i]) === _.toLower(this.targetUserName)) return;
+      console.log(usernames[i], userName);
+      if (_.toLower(usernames[i]) === _.toLower(userName)) return;
     }
-    if (!this.targetUser) return;
+    if (!user) return;
 
-    usernames.push(this.targetUserName);
-    users.push(this.targetUser);
+    usernames.push(userName);
+    users.push(user);
     updateLocalStorage();
   }
+
   removeUser(username) {
     usernames = usernames.filter(u => u !== username);
     users = users.filter(u => u.login !== username);
@@ -90,7 +93,7 @@ export class Settings {
   }
 }
 
-async function fetchGithub(url, msg) {
+export async function fetchGithub(url, msg) {
   let res;
   try {
     res = await axios.get(url);

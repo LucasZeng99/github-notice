@@ -33,8 +33,10 @@ button {
   align-items: center;
   margin-top: 3.5rem;
 }
-
-.button {
+.buttonContainer div {
+  flex-grow: 1;
+}
+.add {
   padding: 5px 15px;
   background-color: #30a7d7;
   outline: none;
@@ -43,8 +45,18 @@ button {
   color: #fff;
   margin: 1rem 0;
 }
-.button:hover {
+.add:hover {
   background-color: #1b82b1;
+}
+.clearAll {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #e50000;
+  font-weight: 500;
+}
+.clearAll:hover {
+  color: #ff4c4c;
 }
 
 .input {
