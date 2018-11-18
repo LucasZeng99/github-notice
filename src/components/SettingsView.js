@@ -54,14 +54,31 @@ class SettingsView extends Component {
     this.setState({ usernames });
   };
 
+  clearAll = () => {
+    settings.cleanUsers();
+    let usernames = store.snapUserNames();
+    this.setState({ usernames });
+  };
   render() {
     return (
       <div style={{ width: "300px", height: "400px" }}>
         <div className="col justify-content-center">
           <div className="buttonContainer">
-            <button className="button" onClick={this.toggleForm}>
-              Add
-            </button>
+            <div>
+              <button className="add" onClick={this.toggleForm}>
+                Add
+              </button>
+            </div>
+            <div>
+              <button className="logIn add" onClick={this.clearAll}>
+                Log In
+              </button>
+            </div>
+            <div>
+              <button className="clearAll" onClick={this.clearAll}>
+                Clear
+              </button>
+            </div>
           </div>
 
           {this.state.showForm && <Form checkAndSave={this.checkAndSave} />}

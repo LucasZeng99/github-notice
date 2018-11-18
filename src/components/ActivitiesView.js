@@ -20,11 +20,11 @@ class ActivitiesView extends Component {
     for (let i = 0; i < _activities.length; i++) {
       activities[usernames[i]] = _activities[i];
     }
-    
-    activities = normalizeActivities(activities)
+
+    activities = normalizeActivities(activities);
     activities = flattenActivities(activities).sort((a, b) => {
-      return new Date(b.time) - new Date(a.time)
-    })
+      return new Date(b.time) - new Date(a.time);
+    });
     this.setState({ activities });
   }
 
@@ -78,7 +78,7 @@ export function normalizeActivities(activities) {
       repo: {},
       count: 0,
       time: 0
-    }
+    };
 
     let i = 0;
     while (i < events.length) {
@@ -100,7 +100,7 @@ export function normalizeActivities(activities) {
           count: event.payload.size || 1,
           time: event.created_at,
           url: event.repo.url
-        }
+        };
       }
       i++;
     }
@@ -126,19 +126,20 @@ function mapEventType(event) {
       event.type = "public";
       break;
     case "CreateEvent":
-      event.type = "new repo"
-      break
+      event.type = "new repo";
+      break;
     case "MemberEvent":
-      event.type = "new member"
-      break
+      event.type = "new member";
+      break;
     default:
       break;
   }
 }
 
-function mapEventRepo (event, name) {
-  let repoOwner = event.repo.name.slice(0, event.repo.name.indexOf('/'))
-  if (repoOwner === name) event.repo.name = event.repo.name.slice(event.repo.name.indexOf('/'))
+function mapEventRepo(event, name) {
+  let repoOwner = event.repo.name.slice(0, event.repo.name.indexOf("/"));
+  if (repoOwner === name)
+    event.repo.name = event.repo.name.slice(event.repo.name.indexOf("/"));
 }
 
 function flattenActivities(activities) {
@@ -153,5 +154,5 @@ function flattenActivities(activities) {
       newActivities.push(event);
     }
   }
-  return newActivities
+  return newActivities;
 }
