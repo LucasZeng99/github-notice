@@ -19,6 +19,12 @@ class SettingsView extends Component {
     }
   };
 
+  toggleForm = () => {
+    this.setState({
+      showForm: !this.state.showForm
+    });
+  };
+
   dispUserName = () => {
     const usernames = store.snapUserNames();
     let list = [];
@@ -43,10 +49,15 @@ class SettingsView extends Component {
 
   render() {
     return (
-      <div className="container" style={{ width: "300px", height: "400px" }}>
-        <div className="row">
-          <button className="add">Add</button>
-          <Form checkAndSave={this.checkAndSave} />
+      <div style={{ width: "300px", height: "400px" }}>
+        <div className="col justify-content-center">
+          <div className="buttonContainer">
+            <button className="button" onClick={this.toggleForm}>
+              Add
+            </button>
+          </div>
+
+          {this.state.showForm && <Form checkAndSave={this.checkAndSave} />}
         </div>
         <div className="col userContainer">{this.dispUserName()}</div>
       </div>
