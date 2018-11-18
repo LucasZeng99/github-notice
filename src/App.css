@@ -16,6 +16,11 @@ a {
 button {
   cursor: pointer;
 }
+button:active,
+button:focus {
+  outline: none;
+  border: none;
+}
 .router {
   display: flex;
   text-align: center;
@@ -36,6 +41,7 @@ button {
 .buttonContainer div {
   flex-grow: 1;
 }
+
 .add {
   padding: 5px 15px;
   background-color: #30a7d7;
@@ -48,17 +54,25 @@ button {
 .add:hover {
   background-color: #1b82b1;
 }
-.clearAll {
+.style1 {
   border: none;
   outline: none;
   background: transparent;
-  color: #e50000;
+
   font-weight: 500;
+}
+.clearAll {
+  color: #e50000;
 }
 .clearAll:hover {
   color: #ff4c4c;
 }
-
+.import {
+  color: #30a7d7;
+}
+.import:hover {
+  color: #59b8df;
+}
 .input {
   border: none;
   border-bottom: 2px solid black;

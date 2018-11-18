@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { ReactDOM } from "react-dom";
 import { Settings, Store } from "../store/index";
 import Form from "./Form";
 
@@ -8,7 +9,28 @@ const settings = new Settings();
 const store = new Store();
 
 class SettingsView extends Component {
-  state = { usernames: [], showForm: false };
+  state = { usernames: [], showForm: false, onInput: false };
+
+  componentDidMount() {
+    document.addEventListener("mousedown", this.collaspeForm);
+  }
+  collaspeForm = () => {
+    this.state.onInput &&
+      this.setState({
+        showForm: false,
+        onInput: false
+      });
+  };
+  onInput = () => {
+    this.setState({
+      onInput: true
+    });
+  };
+  outInput = () => {
+    this.setState({
+      onInput: false
+    });
+  };
   checkAndSave = async e => {
     e.preventDefault();
     const name = e.target.elements.name.value;
@@ -59,6 +81,8 @@ class SettingsView extends Component {
     let usernames = store.snapUserNames();
     this.setState({ usernames });
   };
+  importUser() {}
+
   render() {
     return (
       <div style={{ width: "300px", height: "400px" }}>
@@ -70,18 +94,32 @@ class SettingsView extends Component {
               </button>
             </div>
             <div>
-              <button className="import" onClick={this.importUser}>
-                Import User
+              <button className="style1 import" onClick={this.importUser}>
+                Import
               </button>
             </div>
             <div>
-              <button className="clearAll" onClick={this.clearAll}>
+              <button className="style1 clearAll" onClick={this.clearAll}>
                 Clear
               </button>
             </div>
           </div>
-
-          {this.state.showForm && <Form checkAndSave={this.checkAndSave} />}
+          {this.state.showLogin && (
+            <Form
+              submitFunction={this.login}
+              msg={"github username"}
+              onInput={this.onInput}
+              outInput={this.outInput}
+            />
+          )}
+          {this.state.showForm && (
+            <Form
+              submitFunction={this.checkAndSave}
+              msg={"Enter name"}
+              onInput={this.onInput}
+              outInput={this.outInput}
+            />
+          )}
         </div>
 
         <div className="userContainer">{this.dispUserName()}</div>
