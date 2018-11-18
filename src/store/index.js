@@ -37,7 +37,7 @@ export class Store {
         "https://api.github.com/users/" + users[i].login + "/events",
         () => console.log("cannot fetch user", users[i].login, " data")
       );
-      console.log(res.data);
+      console.log("fetched activities: ", res.data);
       if (res) return res.data;
     }
     return null;
@@ -103,7 +103,6 @@ async function fetchGithub(url, msg) {
 }
 
 function syncFromLocalStorage() {
-  console.log(localStorage.getItem("users"));
   users = JSON.parse(localStorage.getItem("users")) || [];
   usernames = JSON.parse(localStorage.getItem("usernames")) || [];
 }
