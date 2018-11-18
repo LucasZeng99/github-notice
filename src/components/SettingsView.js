@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { ReactDOM } from "react-dom";
-import { Settings, Store } from "../store/index";
+import { Settings, Store, fetchGithub } from "../store/index";
 import Form from "./Form";
 
 import Close from "@material-ui/icons/Close";
@@ -76,13 +75,27 @@ class SettingsView extends Component {
     this.setState({ usernames });
   };
 
+  async importUser(e) {
+    // e.preventDefault();
+    // const name = e.target.elements.name.value;
+    let name = "LucasZeng99";
+    let username = await settings.checkUserName(name);
+    if (username) {
+      let { data } = await fetchGithub(
+        `https://api.github.com/users/${username}/following`
+      );
+      let usersArray = data;
+      for (let i = 0; i < usersArray.length; i++) {
+        settings.saveCurrentUser(usersArray[i], usersArray[i].login);
+      }
+    }
+  }
+
   clearAll = () => {
     settings.cleanUsers();
     let usernames = store.snapUserNames();
     this.setState({ usernames });
   };
-  importUser() {}
-
   render() {
     return (
       <div style={{ width: "300px", height: "400px" }}>
@@ -106,7 +119,7 @@ class SettingsView extends Component {
           </div>
           {this.state.showLogin && (
             <Form
-              submitFunction={this.login}
+              submitFunction={this.importUser}
               msg={"github username"}
               onInput={this.onInput}
               outInput={this.outInput}
