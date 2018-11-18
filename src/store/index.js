@@ -26,21 +26,23 @@ export class Store {
     return null;
   }
 
-    async getUserActivities (username) {
-        let i = 0
-        for (; i < usernames.length; i++) {
-            if (_.toLower(username) === _.toLower(usernames[i])) break
-        }
-        
-        if (i < usernames.length) {
-            let res = await fetchGithub('https://api.github.com/users/' + users[i].login + '/events', () => console.log("cannot fetch user", users[i].login, " data"))
-            console.log("fetched activities: ", res.data)
-            if (res) return res.data
-        }
-        return null
+  async getUserActivities(username) {
+    let i = 0;
+    for (; i < usernames.length; i++) {
+      if (_.toLower(username) === _.toLower(usernames[i])) break;
     }
-}
 
+    if (i < usernames.length) {
+      let res = await fetchGithub(
+        "https://api.github.com/users/" + users[i].login + "/events",
+        () => console.log("cannot fetch user", users[i].login, " data")
+      );
+      console.log("fetched activities: ", res.data);
+      if (res) return res.data;
+    }
+    return null;
+  }
+}
 
 export class Settings {
   constructor() {
@@ -78,6 +80,7 @@ export class Settings {
   }
   removeUser(username) {
     usernames = usernames.filter(u => u !== username);
+    users = users.filter(u => u.login !== username);
     updateLocalStorage();
   }
   cleanUsers() {

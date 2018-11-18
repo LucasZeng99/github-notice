@@ -6,7 +6,7 @@ const settings = new Settings();
 const store = new Store();
 
 class SettingsView extends Component {
-  state = { usernames: [] };
+  state = { usernames: [], showForm: false };
   checkAndSave = async e => {
     e.preventDefault();
     const name = e.target.elements.name.value;
@@ -17,6 +17,12 @@ class SettingsView extends Component {
         usernames
       });
     }
+  };
+
+  toggleForm = () => {
+    this.setState({
+      showForm: !this.state.showForm
+    });
   };
 
   dispUserName = () => {
@@ -43,10 +49,15 @@ class SettingsView extends Component {
 
   render() {
     return (
-      <div className="container" style={{ width: "300px", height: "400px" }}>
-        <div className="row">
-          <button className="add">Add</button>
-          <Form checkAndSave={this.checkAndSave} />
+      <div style={{ width: "300px", height: "400px" }}>
+        <div className="col justify-content-center">
+          <div className="buttonContainer">
+            <button className="button" onClick={this.toggleForm}>
+              Add
+            </button>
+          </div>
+
+          {this.state.showForm && <Form checkAndSave={this.checkAndSave} />}
         </div>
         <div className="col userContainer">{this.dispUserName()}</div>
       </div>

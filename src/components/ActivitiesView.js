@@ -21,7 +21,7 @@ class ActivitiesView extends Component {
     }
     
     console.log(activities)
-    normalizeActivities(activities)
+    activities = normalizeActivities(activities)
     console.log("after normalization: ", activities)
 
     this.setState({activities})
@@ -39,8 +39,24 @@ class ActivitiesView extends Component {
   }
 
   renderActivities () {
-    let renderEl = []
+    let renderedEvents = []
+    let activities = this.state.activities || {}
+    
+    let event
+    let keys = Object.keys(activities)
+    for (let i = 0; i < keys.length; i++) {
+      for (let j = 0; j < activities[keys[i]].length; j++) {
+        event = activities[keys[i]][j]
+        console.log(event)
+        renderedEvents.push(
+          <div>
+          {keys[i]}: {event.count} {event.type} on {event.repo.name}
+          </div>
+          )
+      }
+    }
 
+    return renderedEvents
   }
 
   render () {
@@ -57,6 +73,7 @@ export default ActivitiesView;
 
 
 export function normalizeActivities (activities) {
+  let finalActivities = {}
   for (let name of Object.keys(activities)) {
     let events = activities[name]
 
@@ -70,8 +87,9 @@ export function normalizeActivities (activities) {
     let i = 0
     while (i < events.length) {
       let event = events[i]
-      if (newEvent && newEvent.type === event.type && newEvent.repo === event.repo) {
+      if (newEvent && newEvent.type === event.type && newEvent.repo.name === event.repo.name) {
         newEvent.count += event.payload.size || 1
+        console.log("same obj")
       }
       else {
         if (Boolean(newEvent.type)) newEvents.push(newEvent)
@@ -83,9 +101,9 @@ export function normalizeActivities (activities) {
       }
       i++
     }
-
     if (!!newEvent.type) newEvents.push(newEvent)
-    
-    return newEvents
+      
+    finalActivities[name] = newEvents
   }
+  return finalActivities
 }
