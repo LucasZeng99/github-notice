@@ -6,7 +6,7 @@ const settings = new Settings();
 const store = new Store();
 
 class SettingsView extends Component {
-  state = { usernames: [] };
+  state = { usernames: [], showForm: false };
   checkAndSave = async e => {
     e.preventDefault();
     const name = e.target.elements.name.value;

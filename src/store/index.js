@@ -80,6 +80,7 @@ export class Settings {
   }
   removeUser(username) {
     usernames = usernames.filter(u => u !== username);
+    users = users.filter(u => u.login !== username);
     updateLocalStorage();
   }
   cleanUsers() {
@@ -102,8 +103,9 @@ async function fetchGithub(url, msg) {
 }
 
 function syncFromLocalStorage() {
-  users = JSON.parse(localStorage.getItem("users") || []);
-  usernames = JSON.parse(localStorage.getItem("usernames") || []);
+  console.log(localStorage.getItem("users"));
+  users = JSON.parse(localStorage.getItem("users")) || [];
+  usernames = JSON.parse(localStorage.getItem("usernames")) || [];
 }
 
 function updateLocalStorage() {
