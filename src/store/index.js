@@ -37,7 +37,6 @@ export class Store {
         "https://api.github.com/users/" + users[i].login + "/events",
         () => console.log("cannot fetch user", users[i].login, " data")
       );
-      console.log("fetched activities: ", res.data);
       if (res) return res.data;
     }
     return null;
@@ -60,7 +59,6 @@ export class Settings {
     if (res) {
       this.targetUser = res.data;
       this.targetUserName = res.data.login;
-      console.log("target user name: ", this.targetUserName);
       return this.targetUserName;
     }
     return false;
@@ -69,9 +67,7 @@ export class Settings {
   saveCurrentUser(user, userName) {
     if (!user) user = this.targetUser
     if (!userName) userName = this.targetUserName
-    console.log(userName, usernames);
     for (let i = 0; i < usernames.length; i++) {
-      console.log(usernames[i], userName);
       if (_.toLower(usernames[i]) === _.toLower(userName)) return;
     }
     if (!user) return;

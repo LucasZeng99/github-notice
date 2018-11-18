@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { ReactDOM } from "react-dom";
 import { Settings, Store, fetchGithub } from "../store/index";
 import Form from "./Form";
 
@@ -8,7 +9,29 @@ const settings = new Settings();
 const store = new Store();
 
 class SettingsView extends Component {
-  state = { usernames: [], showForm: false };
+  state = { usernames: [], showForm: false, onInput: false };
+
+  componentDidMount() {
+    document.addEventListener("mousedown", this.collaspeForm);
+  }
+  collaspeForm = () => {
+    this.state.onInput &&
+      this.setState({
+        showForm: false,
+        onInput: false,
+        showImport: false
+      });
+  };
+  onInput = () => {
+    this.setState({
+      onInput: true
+    });
+  };
+  outInput = () => {
+    this.setState({
+      onInput: false
+    });
+  };
   checkAndSave = async e => {
     e.preventDefault();
     const name = e.target.elements.name.value;
@@ -26,6 +49,12 @@ class SettingsView extends Component {
       showForm: !this.state.showForm
     });
   };
+
+  toggleImportForm = () => {
+    this.setState({
+      showImport: !this.state.showImport
+    })
+  }
 
   dispUserName = () => {
     const usernames = store.snapUserNames();
@@ -54,10 +83,9 @@ class SettingsView extends Component {
     this.setState({ usernames });
   };
 
-  async importUser (e) {
-    // e.preventDefault();
-    // const name = e.target.elements.name.value;
-    let name = "LucasZeng99"
+  importUser  = async (e) => {
+    e.preventDefault();
+    const name = e.target.elements.name.value;
     let username = await settings.checkUserName(name)
     if (username) {
       let {data} = await fetchGithub(`https://api.github.com/users/${username}/following`)
@@ -65,6 +93,9 @@ class SettingsView extends Component {
       for (let i = 0; i < usersArray.length; i++) {
         settings.saveCurrentUser(usersArray[i], usersArray[i].login)
       }
+
+      let usernames = store.snapUserNames()
+      this.setState({usernames})
     }
   }
 
@@ -84,18 +115,32 @@ class SettingsView extends Component {
               </button>
             </div>
             <div>
-              <button className="import" onClick={this.importUser}>
+              <button className="style1 import" onClick={this.toggleImportForm}>
                 Import
               </button>
             </div>
             <div>
-              <button className="clearAll" onClick={this.clearAll}>
+              <button className="style1 clearAll" onClick={this.clearAll}>
                 Clear
               </button>
             </div>
           </div>
-          {this.state.showLogin && <Form submitFunction={this.importUser} msg={"github username"}/>}
-          {this.state.showForm && <Form submitFunction={this.checkAndSave} msg={"Enter name"}/>}
+          {this.state.showImport && (
+            <Form
+              submitFunction={this.importUser}
+              msg={"github username"}
+              onInput={this.onInput}
+              outInput={this.outInput}
+            />
+          )}
+          {this.state.showForm && (
+            <Form
+              submitFunction={this.checkAndSave}
+              msg={"Enter name"}
+              onInput={this.onInput}
+              outInput={this.outInput}
+            />
+          )}
         </div>
 
         <div className="userContainer">{this.dispUserName()}</div>
