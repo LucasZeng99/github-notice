@@ -3,6 +3,7 @@ import axios from "axios";
 let usernames = [];
 let users = [];
 let activities = [];
+let activities_time = null
 
 export class Store {
   constructor() {
@@ -17,6 +18,18 @@ export class Store {
     return users;
   }
 
+  setActivities (inComingActivities, time) {
+    activities = inComingActivities
+    activities_time = time
+  }
+
+  getActivities () { 
+    let now = new Date()
+    if (activities_time === null || now - activities_time > 300000) return null
+    
+    return activities
+  }
+   
   getUserData(username) {
     for (let i = 0; i < users.length; i++) {
       if (_.toLower(users.login) === _.toLower(username)) {

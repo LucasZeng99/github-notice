@@ -27,6 +27,7 @@ class ActivitiesView extends Component {
       return new Date(b.time) - new Date(a.time);
     });
     this.setState({ activities });
+    store.setActivities(activities, new Date())
   }
 
   fetchUserNames() {
@@ -36,8 +37,17 @@ class ActivitiesView extends Component {
   }
 
   componentDidMount() {
-    this.fetchUserNames();
-    this.fetchActivities();
+    let activities = store.getActivities()
+    // console.log("getting activities...")
+    if (!activities) {
+      // console.log("there is no activities")
+      this.fetchUserNames();
+      this.fetchActivities();
+    } else {
+      // console.log(activities)
+      this.setState({activities})
+    }
+    
   }
 
   renderActivities() {
