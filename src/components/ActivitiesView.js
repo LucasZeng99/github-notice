@@ -38,17 +38,8 @@ class ActivitiesView extends Component {
   }
 
   componentDidMount() {
-    let activities = store.getActivities()
-    // console.log("getting activities...")
-    if (!activities) {
-      // console.log("there is no activities")
-      this.fetchUserNames();
-      this.fetchActivities();
-    } else {
-      // console.log(activities)
-      this.setState({activities})
-    }
-    
+    this.fetchUserNames()
+    this.fetchActivities()
   }
 
   renderActivities() {
