@@ -14,6 +14,7 @@ export function normalizeActivities(activities) {
         let i = 0;
         while (i < events.length) {
             let event = events[i];
+            let url = event.repo.name
             mapEventType(event);
             mapEventRepo(event, name);
             if (
@@ -23,13 +24,14 @@ export function normalizeActivities(activities) {
             ) {
                 newEvent.count += event.payload.size || 1;
             } else {
+                console.log(url)
                 if (Boolean(newEvent.type)) newEvents.push(newEvent);
                 newEvent = {
                     type: event.type,
                     repo: event.repo,
                     count: event.payload.size || 1,
                     time: event.created_at,
-                    url: `https://github.com/${event.repo.name}`
+                    url: `https://github.com/${url}`
                 }
             }
             i++;
