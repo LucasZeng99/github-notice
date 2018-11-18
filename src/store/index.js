@@ -34,7 +34,7 @@ export class Store {
         
         if (i < usernames.length) {
             let res = await fetchGithub('https://api.github.com/users/' + users[i].login + '/events', () => console.log("cannot fetch user", users[i].login, " data"))
-            console.log(res.data)
+            console.log("fetched activities: ", res.data)
             if (res) return res.data
         }
         return null
@@ -100,8 +100,8 @@ async function fetchGithub(url, msg) {
 }
 
 function syncFromLocalStorage() {
-  users = JSON.parse(localStorage.getItem("users") || []);
-  usernames = JSON.parse(localStorage.getItem("usernames") || []);
+  users = JSON.parse(localStorage.getItem("users")) || [];
+  usernames = JSON.parse(localStorage.getItem("usernames")) || [];
 }
 
 function updateLocalStorage() {

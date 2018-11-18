@@ -5,24 +5,41 @@ const store = new Store();
 
 class ActivitiesView extends Component {
   
-  state = {activities: []}
+  state = {
+    activities: {},
+    usernames: []
+  }
 
   async fetchActivities () {
-    let data = await store.getUserActivities('LucasZeng99')
-    console.log(data)
-    this.setState({activities: data})
+    let _activities = []
+    let usernames = store.snapUserNames()
+    _activities = await Promise.all(usernames.map(name => store.getUserActivities(name)))
+
+    let activities = {}
+    for (let i = 0; i < _activities.length; i++) {
+      activities[usernames[i]] = _activities[i]
+    }
+    
+    console.log(activities)
+    normalizeActivities(activities)
+    console.log("after normalization: ", activities)
+
+    this.setState({activities})
+  }
+
+  fetchUserNames () {
+    this.setState({
+      usernames: store.snapUserNames()
+    })
   }
 
   componentDidMount () {
+    this.fetchUserNames()
     this.fetchActivities()
   }
 
   renderActivities () {
-    let activities = []
-    for (let act of this.state.activities) {
-      activities.push(<div>{act.id}</div>)
-    }
-    return activities
+    let renderEl = []
   }
 
   render () {
@@ -39,5 +56,5 @@ export default ActivitiesView;
 
 
 function normalizeActivities (acts) {
-  
+
 }
