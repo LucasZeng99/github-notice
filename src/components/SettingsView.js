@@ -32,16 +32,16 @@ class SettingsView extends Component {
     let list = [];
     usernames.map(username => {
       list.push(
-        <div key={username}>
-          <span className="text">{username}</span>
-          <span>
+        <div className="user" key={username}>
+          <div className="text">{username}</div>
+          <div className="removeButtonContainer">
             <button
               className="removeButton"
               onClick={() => this.removeUser(username)}
             >
               <Close />
             </button>
-          </span>
+          </div>
         </div>
       );
     });
