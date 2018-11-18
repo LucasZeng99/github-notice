@@ -70,8 +70,8 @@ class SettingsView extends Component {
               </button>
             </div>
             <div>
-              <button className="logIn add" onClick={this.clearAll}>
-                Log In
+              <button className="import" onClick={this.importUser}>
+                Import User
               </button>
             </div>
             <div>

@@ -52,8 +52,8 @@ button {
   border: none;
   outline: none;
   background: transparent;
-  color: #ff3232;
-  font-weight: bold;
+  color: #e50000;
+  font-weight: 500;
 }
 .clearAll:hover {
   color: #ff4c4c;
