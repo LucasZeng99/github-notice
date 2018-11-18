@@ -10,8 +10,9 @@ const Router = () => {
       <div className="router">
         <Navbar />
         <Switch>
-        <Route path="/settings" component={SettingsView} />
+          <Route path="/settings" component={SettingsView} />
           <Route path="/" component={ActivitiesView}/>
+          
         </Switch>
       </div>
     </BrowserRouter>
