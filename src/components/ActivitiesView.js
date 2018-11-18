@@ -40,6 +40,7 @@ class ActivitiesView extends Component {
 
   renderActivities () {
     let renderEl = []
+
   }
 
   render () {
@@ -55,6 +56,36 @@ class ActivitiesView extends Component {
 export default ActivitiesView;
 
 
-function normalizeActivities (acts) {
+export function normalizeActivities (activities) {
+  for (let name of Object.keys(activities)) {
+    let events = activities[name]
 
+    let newEvents = []
+    let newEvent = {
+      type: '',
+      repo: {},
+      count: 0
+    }
+
+    let i = 0
+    while (i < events.length) {
+      let event = events[i]
+      if (newEvent && newEvent.type === event.type && newEvent.repo === event.repo) {
+        newEvent.count += event.payload.size || 1
+      }
+      else {
+        if (Boolean(newEvent.type)) newEvents.push(newEvent)
+        newEvent = {
+          type: event.type,
+          repo: event.repo,
+          count: event.payload.size || 1
+        }
+      }
+      i++
+    }
+
+    if (!!newEvent.type) newEvents.push(newEvent)
+    
+    return newEvents
+  }
 }
