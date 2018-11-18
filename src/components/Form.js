@@ -2,12 +2,12 @@ import React from "react";
 
 const Form = props => {
   return (
-    <form onSubmit={props.checkAndSave}>
+    <form onSubmit={props.submitFunction}>
       <div className="form-group">
         <input
           className="input"
           type="text"
-          placeholder="Enter name"
+          placeholder={props.msg}
           name="name"
         />
       </div>

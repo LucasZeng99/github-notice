@@ -54,17 +54,24 @@ class SettingsView extends Component {
     this.setState({ usernames });
   };
 
+  importUser () {
+    
+  }
+
   render() {
     return (
       <div style={{ width: "300px", height: "400px" }}>
         <div className="col justify-content-center">
           <div className="buttonContainer">
-            <button className="button" onClick={this.toggleForm}>
+            <button className="button" onClick={this.toggleForm} onBlur={this.toggleForm}>
               Add
             </button>
+            <button className="button" onClick={this.login}>
+              Import
+            </button>
           </div>
-
-          {this.state.showForm && <Form checkAndSave={this.checkAndSave} />}
+          {this.state.showLogin && <Form submitFunction={this.login} msg={"github username"}/>}
+          {this.state.showForm && <Form submitFunction={this.checkAndSave} msg={"Enter name"}/>}
         </div>
 
         <div className="userContainer">{this.dispUserName()}</div>

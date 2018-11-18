@@ -49,10 +49,12 @@ class ActivitiesView extends Component {
       let type = event.count > 1 ? event.type + "s" : event.type;
       renderedEvents.push(
         <div className="activity">
+          <a href={event.url} target="_blank">
           <div>
             {event.user}: {event.count} {type}
           </div>
           <div>on {event.repo.name}</div>
+          </a>
         </div>
       );
     }
@@ -99,7 +101,7 @@ export function normalizeActivities(activities) {
           repo: event.repo,
           count: event.payload.size || 1,
           time: event.created_at,
-          url: event.repo.url
+          url: `https://github.com/${event.repo.name}`
         }
       }
       i++;
