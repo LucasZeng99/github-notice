@@ -6,7 +6,8 @@ let activities = [];
 
 export class Store {
   constructor() {
-    if (usernames.length === 0 || users.length === 0) syncFromLocalStorage();
+    if (usernames.length === 0 || users.length === 0 || activities.length === 0)
+      syncFromLocalStorage();
   }
 
   snapUserNames() {
@@ -16,7 +17,6 @@ export class Store {
   snapUsers() {
     return users;
   }
-
   getUserData(username) {
     for (let i = 0; i < users.length; i++) {
       if (_.toLower(users.login) === _.toLower(username)) {
@@ -40,6 +40,7 @@ export class Store {
       console.log("fetched activities: ", res.data);
       if (res) return res.data;
     }
+
     return null;
   }
 }
@@ -67,8 +68,8 @@ export class Settings {
   }
 
   saveCurrentUser(user, userName) {
-    if (!user) user = this.targetUser
-    if (!userName) userName = this.targetUserName
+    if (!user) user = this.targetUser;
+    if (!userName) userName = this.targetUserName;
     console.log(userName, usernames);
     for (let i = 0; i < usernames.length; i++) {
       console.log(usernames[i], userName);

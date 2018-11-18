@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Store } from "../store/index";
-
+import _ from "lodash";
 const store = new Store();
 
 class ActivitiesView extends Component {
@@ -63,7 +63,12 @@ class ActivitiesView extends Component {
   }
 
   render() {
-    return <div className="activityContainer">{this.renderActivities()}</div>;
+    return (
+      <div className="activityContainer">
+        {_.isEmpty(store.snapUserNames()) && <div>No activities</div>}
+        {this.renderActivities()}
+      </div>
+    );
   }
 }
 
