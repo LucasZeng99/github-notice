@@ -20,9 +20,10 @@ class ActivitiesView extends Component {
       activities[usernames[i]] = _activities[i]
     }
     
-    console.log(activities)
     activities = normalizeActivities(activities)
-    console.log("after normalization: ", activities)
+    activities = flattenActivities(activities).sort((a, b) => {
+      return new Date(b.time) - new Date(a.time)
+    })
 
     this.setState({activities})
   }
@@ -43,18 +44,14 @@ class ActivitiesView extends Component {
     let activities = this.state.activities || {}
     
     let event
-    let keys = Object.keys(activities)
-    for (let i = 0; i < keys.length; i++) {
-      for (let j = 0; j < activities[keys[i]].length; j++) {
-        event = activities[keys[i]][j]
-        console.log(event)
+    for (let i = 0; i < activities.length; i++) {
+        event = activities[i]
         let type = (event.count > 1) ? event.type + 's' : event.type
         renderedEvents.push(
           <div>
-          {keys[i]}: {event.count} {type} on {event.repo.name}
+          {event.user}: {event.count} {type} on {event.repo.name}
           </div>
           )
-      }
     }
 
     return renderedEvents
@@ -81,7 +78,8 @@ export function normalizeActivities (activities) {
     let newEvent = {
       type: '',
       repo: {},
-      count: 0
+      count: 0,
+      time: 0
     }
 
     let i = 0
@@ -98,7 +96,9 @@ export function normalizeActivities (activities) {
         newEvent = {
           type: event.type,
           repo: event.repo,
-          count: event.payload.size || 1
+          count: event.payload.size || 1,
+          time: event.created_at,
+          url: event.repo.url
         }
       }
       i++
@@ -127,6 +127,9 @@ function mapEventType (event) {
     case "CreateEvent":
       event.type = "new repo"
       break
+    case "MemberEvent":
+      event.type = "new member"
+      break
     default:
       break;
   }
@@ -134,6 +137,20 @@ function mapEventType (event) {
 
 function mapEventRepo (event, name) {
   let repoOwner = event.repo.name.slice(0, event.repo.name.indexOf('/'))
-  console.log(repoOwner)
   if (repoOwner === name) event.repo.name = event.repo.name.slice(event.repo.name.indexOf('/'))
+}
+
+function flattenActivities(activities) {
+  let newActivities = []
+  let keys = Object.keys(activities)
+
+  for (let i = 0; i < keys.length; i++) {
+    let name = keys[i]
+    for (let j = 0; j < activities[name].length; j++) {
+      let event = activities[name][j]
+      event.user = name
+      newActivities.push(event)
+    }
+  }
+  return newActivities
 }
