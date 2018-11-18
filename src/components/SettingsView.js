@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Settings, Store } from "../store/index";
 import Form from "./Form";
 
+import Close from "@material-ui/icons/Close";
+
 const settings = new Settings();
 const store = new Store();
 
@@ -31,9 +33,14 @@ class SettingsView extends Component {
     usernames.map(username => {
       list.push(
         <div key={username}>
-          <span>{username}</span>
+          <span className="text">{username}</span>
           <span>
-            <button onClick={() => this.removeUser(username)}>X</button>
+            <button
+              className="removeButton"
+              onClick={() => this.removeUser(username)}
+            >
+              <Close />
+            </button>
           </span>
         </div>
       );
@@ -59,7 +66,8 @@ class SettingsView extends Component {
 
           {this.state.showForm && <Form checkAndSave={this.checkAndSave} />}
         </div>
-        <div className="col userContainer">{this.dispUserName()}</div>
+
+        <div className="userContainer">{this.dispUserName()}</div>
       </div>
     );
   }

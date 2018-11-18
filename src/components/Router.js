@@ -6,7 +6,7 @@ import ActivitiesView from "./ActivitiesView";
 import SettingsView from "./SettingsView";
 const Router = () => (
   <BrowserRouter>
-    <div class="router">
+    <div className="router">
       <Navbar />
       <Switch>
         <Route path="/" component={ActivitiesView} exact />
